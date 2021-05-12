@@ -5,7 +5,7 @@ import Product from '../Product'
 import Banner from '../Banner'
 
 
-const Products = ({ products }) => {
+const Products = ({ products, addProduct }) => {
     return (
         <div>
             <Banner/>
@@ -14,7 +14,7 @@ const Products = ({ products }) => {
                     {products.map(product => {
                         return (
                             <Grid key={product.id} item xs={12} sm={6} md={4}>
-                                <Product product={product}/>
+                                <Product product={product} addProduct={addProduct}/>
                             </Grid>
                         )
                     })}
