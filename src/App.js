@@ -3,6 +3,8 @@ import { commerce } from './lib/commerce'
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 
 import Products from './components/Products'
+import NavBar from './components/NavBar'
+import Footer from './components/Footer'
 
 
 function App() {
@@ -22,11 +24,13 @@ function App() {
   return (
     <Router>
       <div>
+        <NavBar/>
         <Switch>
           <Route exact path="/">
             <Products products={products}/>
           </Route>
         </Switch>
+        <Footer/>
       </div>
     </Router>
   );

@@ -1,10 +1,14 @@
-import Product from '../Product'
 import { Grid, Container } from '@material-ui/core'
+
+import './styles.css'
+import Product from '../Product'
+import Banner from '../Banner'
 
 
 const Products = ({ products }) => {
     return (
         <div>
+            <Banner/>
             <Container id="products">
                 <Grid container spacing={4}>
                     {products.map(product => {
