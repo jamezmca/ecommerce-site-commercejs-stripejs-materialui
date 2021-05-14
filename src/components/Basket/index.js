@@ -11,6 +11,9 @@ import {
     Button
 } from '@material-ui/core'
 import { Link } from 'react-router-dom'
+import {useState} from 'react'
+import Spinner from '../Spinner'
+import Banner from './Banner'
 
 
 const Basket = ({
@@ -19,7 +22,20 @@ const Basket = ({
     handleEmptyBasket,
     RemoveItemFromBasket
 }) => {
-    if (!basketData.line_items || !basketData.line_items.length) return <h1>Loading...</h1>
+    const [showSpinner, setShowSpinner] = useState(true)
+        
+    function loading() {
+        setTimeout(() => {
+            setShowSpinner(false)
+        }, 2000)
+        if (showSpinner) {
+            return <Spinner/>
+        } else {
+            return <Banner/>
+        }
+    }
+
+    if (!basketData.line_items || !basketData.line_items.length) return loading()
     return (
         <Container id="basket">
             <Grid container justify="center" spacing={4}>

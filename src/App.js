@@ -6,6 +6,7 @@ import Products from './components/Products'
 import NavBar from './components/NavBar'
 import Footer from './components/Footer'
 import Basket from './components/Basket'
+import Checkout from './components/Checkout'
 
 
 function App() {
@@ -51,7 +52,9 @@ function App() {
   return (
     <Router>
       <div>
-        <NavBar basketItems={basketData.total_items}/>
+        <NavBar 
+          basketItems={basketData.total_items} 
+          totalCost={(basketData.subtotal && basketData.subtotal.formatted_with_symbol) || "00.00"}/>
         <Switch>
           <Route exact path="/">
             <Products products={products} addProduct={addProduct} />
@@ -62,6 +65,9 @@ function App() {
               updateProduct={updateProduct}
               handleEmptyBasket={handleEmptyBasket}
               RemoveItemFromBasket={RemoveItemFromBasket}/>
+          </Route>
+          <Route exact path="/checkout">
+            <Checkout/>
           </Route>
         </Switch>
         <Footer />
