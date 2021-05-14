@@ -29,7 +29,7 @@ const Basket = ({
                             <Card className="custom-card">
                                 <CardActionArea>
                                     <CardMedia
-                                        components="img"
+                                        component="img"
                                         height="260"
                                         alt="contemplative reptile"
                                         className="card-image"
