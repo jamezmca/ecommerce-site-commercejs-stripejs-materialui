@@ -67,7 +67,7 @@ function App() {
               RemoveItemFromBasket={RemoveItemFromBasket}/>
           </Route>
           <Route exact path="/checkout">
-            <Checkout/>
+            <Checkout basketData={basketData}/>
           </Route>
         </Switch>
         <Footer />
