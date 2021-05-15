@@ -35,7 +35,7 @@ function App() {
   }
 
   const updateProduct = async (productId, quantity) => {
-    const response = await commerce.cart.update(productId, {quantity})
+    const response = await commerce.cart.update(productId, { quantity })
     setBasketData(response.cart)
   }
 
@@ -52,22 +52,22 @@ function App() {
   return (
     <Router>
       <div>
-        <NavBar 
-          basketItems={basketData.total_items} 
-          totalCost={(basketData.subtotal && basketData.subtotal.formatted_with_symbol) || "00.00"}/>
+        <NavBar
+          basketItems={basketData.total_items}
+          totalCost={(basketData.subtotal && basketData.subtotal.formatted_with_symbol) || "00.00"} />
         <Switch>
           <Route exact path="/">
             <Products products={products} addProduct={addProduct} />
           </Route>
           <Route exact path="/basket">
-            <Basket 
+            <Basket
               basketData={basketData}
               updateProduct={updateProduct}
               handleEmptyBasket={handleEmptyBasket}
-              RemoveItemFromBasket={RemoveItemFromBasket}/>
+              RemoveItemFromBasket={RemoveItemFromBasket} />
           </Route>
           <Route exact path="/checkout">
-            <Checkout basketData={basketData}/>
+            <Checkout basketData={basketData} />
           </Route>
         </Switch>
         <Footer />
