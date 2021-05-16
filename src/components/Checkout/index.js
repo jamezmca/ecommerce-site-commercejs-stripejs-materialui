@@ -1,4 +1,4 @@
-import { Container, Typography, Paper, CircularProgress } from '@material-ui/core'
+import { Container, Typography, Paper, CircularProgress, Step, Stepper, StepLabel } from '@material-ui/core'
 import React, { useState, useEffect, useRef } from 'react'
 import { commerce } from '../../lib/commerce'
 import { renderRelatedComponent } from './helpers'
@@ -17,7 +17,7 @@ const usePreviousState = (value) => {
 }
 
 
-const Checkout = ({ basketData, handleCheckout }) => {
+const Checkout = ({ basketData, handleCheckout, orderInfo, orderError }) => {
     const [user, setUser] = useState({
         city: '',
         email: '',
@@ -200,10 +200,22 @@ const Checkout = ({ basketData, handleCheckout }) => {
                     <Typography align="center" variant="h5" gutterBottom>
                         Checkout
                     </Typography>
+                    {bookingStep !== "confirmation" && (
+                        <Stepper
+                            className="stepper"
+                            activeStep={steps.indexOf(bookingStep)}
+                        >
+                            {steps.map((label) => (
+                                <Step key={label}>
+                                    <StepLabel>{label}</StepLabel>
+                                </Step>
+                            ))}
+                        </Stepper>
+                    )}
                     {renderRelatedComponent({
                         user,
-                        // orderInfo,
-                        // orderError,
+                        orderInfo,
+                        orderError,
                         bookingStep,
                         handleChange,
                         handleSubmit,

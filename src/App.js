@@ -51,6 +51,11 @@ function App() {
     setBasketData(response)
   }
 
+  const refreshBasket = async () => {
+    const newBasketData = await commerce.cart.refresh()
+    setBasketData(newBasketData);
+  }
+
   const handleCheckout = async (checkoutId, orderData) => {
     try {
       // const incomingOrder = await commerce.checkout.capture(
@@ -88,7 +93,7 @@ function App() {
               RemoveItemFromBasket={RemoveItemFromBasket} />
           </Route>
           <Route exact path="/checkout">
-            <Checkout basketData={basketData} />
+            <Checkout basketData={basketData} handleCheckout={handleCheckout} orderInfo={orderInfo} orderError={orderError}/>
           </Route>
         </Switch>
         <Footer />
