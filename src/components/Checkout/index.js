@@ -1,13 +1,20 @@
-import { Container, Typography, Paper } from '@material-ui/core'
-import React, { useState, useEffect } from 'react'
+import { Container, Typography, Paper, CircularProgress } from '@material-ui/core'
+import React, { useState, useEffect, useRef } from 'react'
 import { commerce } from '../../lib/commerce'
 import CheckoutForm from './CheckoutForm'
 import './styles.css'
 
 const steps = ["order-address", "order-details", "order-payment"];
 
-const convertObjectToArray = (countries) =>
-    Object.entries(countries || {}).map(([code, name]) => ({ code, name }));
+const convertObjectToArray = (countries) => Object.entries(countries || {}).map(([code, name]) => ({ code, name }))
+
+const usePreviousState = (value) => {
+    const ref = useRef()
+    useEffect(() => {
+        ref.current = value
+    })
+    return ref.current
+}
 
 
 const Checkout = ({ basketData }) => {
@@ -27,6 +34,8 @@ const Checkout = ({ basketData }) => {
     })
 
     const [checkoutData, setCheckoutData] = useState({})
+    const previousShippingCountry = usePreviousState(user.shippingCountry)
+    const previousShippingSubdivision = usePreviousState(user.shippingSubdivision)
 
     function handleChange(e) {
         const { name, value } = e.target
@@ -38,15 +47,17 @@ const Checkout = ({ basketData }) => {
         if (state === "shippingOptions") {
             setUser({
                 ...user,
-                shippingOptions: {
-                    id: value
+                [name]: {
+                    id: value,
                 }
             })
         } else {
             setUser({
                 ...user,
-                name: user[state].find((country) => country.code === value).name, //maybe put [name] at start
-                code: value
+                [name]: {
+                    name: user[state].find((country) => country.code === value).name,
+                    code: value,
+                }
             })
         }
     }
@@ -90,7 +101,7 @@ const Checkout = ({ basketData }) => {
         if (!user.shippingCountries.length && checkoutData.id) {
             fetchShippingCountries();
         }
-    }, [user, checkoutData]);
+    }, [user, checkoutData])
 
     useEffect(() => {
         const fetchSubdivisions = async (countryCode) => {
@@ -112,9 +123,65 @@ const Checkout = ({ basketData }) => {
                 previousShippingCountry.code !== user.shippingCountry.code)
         )
             fetchSubdivisions(user.shippingCountry.code);
-    }, [user, previousShippingCountry]);
+    }, [user, previousShippingCountry])
 
+    useEffect(() => {
+        const fetchShippingOptions = async (
+            checkoutDataId,
+            country,
+            stateProvince = null
+        ) => {
+            const options = await commerce.checkout.getShippingOptions(
+                checkoutDataId,
+                {
+                    country,
+                    region: stateProvince,
+                }
+            );
 
+            setUser({
+                ...user,
+                shippingOptions: options,
+                shippingOption: { id: options[0].id },
+            })
+        };
+
+        if (
+            (user.shippingSubdivision.code && !user.shippingOptions.length) ||
+            (previousShippingSubdivision &&
+                previousShippingSubdivision.code !== user.shippingSubdivision.code)
+        )
+            fetchShippingOptions(
+                checkoutData.id,
+                user.shippingCountry.code,
+                user.shippingSubdivision.code
+            )
+    }, [
+        user,
+        checkoutData.id,
+        user.shippingCountry.code,
+        user.shippingSubdivision,
+        previousShippingSubdivision,
+    ])
+
+    if (
+        !user.shippingSubdivisions.length ||
+        !user.shippingCountries.length ||
+        !user.shippingOptions.length ||
+        !checkoutData.live
+    ) {
+        return (
+            <div className="checkout">
+                <Container>
+                    <Paper className="paper" elevation={3}>
+                        <div className="products-spinner">
+                            <CircularProgress />
+                        </div>
+                    </Paper>
+                </Container>
+            </div>
+        );
+    }
 
     return (
         <div className="checkout">
@@ -123,13 +190,12 @@ const Checkout = ({ basketData }) => {
                     <Typography align="center" variant="h5" gutterBottom>
                         Checkout
                     </Typography>
+                    <CheckoutForm user={user}
+                        handleChange={handleChange}
+                        handleSelectChange={handleSelectChange}
+                        handleSubmit={handleSubmit} />
                 </Paper>
             </Container>
-            <CheckoutForm user={user}
-                handleChange={handleChange}
-                handleSelectChange={handleSelectChange}
-                handleSubmit={handleSubmit} />
-
         </div>
     )
 }
