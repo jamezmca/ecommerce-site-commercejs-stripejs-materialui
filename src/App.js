@@ -12,6 +12,8 @@ import Checkout from './components/Checkout'
 function App() {
   const [products, setProducts] = useState([])
   const [basketData, setBasketData] = useState({})
+  const [orderInfo, setOrderInfo] = useState({});
+  const [orderError, setOrderError] = useState("");
 
   const fetchProducts = async () => {
     const response = await commerce.products.list()
@@ -47,6 +49,25 @@ function App() {
   const RemoveItemFromBasket = async (itemId) => {
     const response = await commerce.cart.remove(itemId)
     setBasketData(response)
+  }
+
+  const handleCheckout = async (checkoutId, orderData) => {
+    try {
+      // const incomingOrder = await commerce.checkout.capture(
+      //   checkoutId,
+      //   orderData
+      // )
+      //COPY STRIPE SECRET KEY AND GO TO COMMERCE AND ADD IN BANK ACCOUNTS AND SECRET KEY IN SETTINGS->PAYMENTGATEWAYS->ENABLESTRIPE->UNCOMMENT->PASSINCOMINGORDER INSTEAD OF ORDERDATA
+
+      setOrderInfo(orderData);
+
+      refreshBasket();
+    } catch (error) {
+      setOrderError(
+        (error.data && error.data.error && error.data.error.message) ||
+        "There is an error occurred"
+      )
+    }
   }
 
   return (
