@@ -11,14 +11,25 @@ import ProductView from './components/ProductView'
 
 
 function App() {
-  const [products, setProducts] = useState([])
+  const [categories, setCategories] = useState([])
   const [basketData, setBasketData] = useState({})
   const [orderInfo, setOrderInfo] = useState({});
   const [orderError, setOrderError] = useState("");
 
   const fetchProducts = async () => {
-    const response = await commerce.products.list()
-    setProducts((response && response.data) || [])
+    const { data: products } = await commerce.products.list()
+    const { data: categoriesData } = await commerce.categories.list()
+    const productsPerCategory = categoriesData.reduce((acc, category) => {
+      return [
+        ...acc,
+        {
+          ...category,
+          productsData: products.filter((product) => product.categories.find((cat) => cat.id === category.id))
+        }
+      ]
+    }, [])
+    setCategories(productsPerCategory)
+    //setProducts((response && response.data) || [])
   }
 
   const fetchBasketData = async () => {
@@ -30,7 +41,6 @@ function App() {
     fetchProducts()
     fetchBasketData()
   }, [])
-  console.log(products)
 
   const addProduct = async (productId, quantity) => {
     const response = await commerce.cart.add(productId, quantity)
@@ -84,7 +94,7 @@ function App() {
           totalCost={(basketData.subtotal && basketData.subtotal.formatted_with_symbol) || "00.00"} />
         <Switch>
           <Route exact path="/">
-            <Products products={products} addProduct={addProduct} />
+            <Products categories={categories} addProduct={addProduct} />
           </Route>
           <Route exact path="/basket">
             <Basket
@@ -101,7 +111,7 @@ function App() {
               orderError={orderError} />
           </Route>
           <Route exact path="/product-view/:id">
-            <ProductView addProduct={addProduct}/>
+            <ProductView addProduct={addProduct} />
           </Route>
         </Switch>
         <Footer />

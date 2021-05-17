@@ -8,6 +8,7 @@
   color: #c9d1d9;
   display: block;
   position: relative;
+  text-decoration: none;
 }
 
 .MuiCard-root.custom-card a h3 {
@@ -33,6 +34,7 @@
 
   .MuiCard-root.custom-card:hover a h3 {
     opacity: 1;
+    text-decoration: none;
   }
   
   .custom-card .content {
@@ -43,6 +45,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: #03dac5;
   }
   
   .custom-card .card-image {
