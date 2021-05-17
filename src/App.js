@@ -7,6 +7,7 @@ import NavBar from './components/NavBar'
 import Footer from './components/Footer'
 import Basket from './components/Basket'
 import Checkout from './components/Checkout'
+import ProductView from './components/ProductView'
 
 
 function App() {
@@ -93,7 +94,14 @@ function App() {
               RemoveItemFromBasket={RemoveItemFromBasket} />
           </Route>
           <Route exact path="/checkout">
-            <Checkout basketData={basketData} handleCheckout={handleCheckout} orderInfo={orderInfo} orderError={orderError}/>
+            <Checkout
+              basketData={basketData}
+              handleCheckout={handleCheckout}
+              orderInfo={orderInfo}
+              orderError={orderError} />
+          </Route>
+          <Route exact path="/product-view/:id">
+            <ProductView addProduct={addProduct}/>
           </Route>
         </Switch>
         <Footer />
