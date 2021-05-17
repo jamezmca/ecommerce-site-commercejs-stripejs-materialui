@@ -1,10 +1,10 @@
-import { Button } from "@material-ui/core";
+import { Button } from "@material-ui/core"
 import {
   Elements,
   CardElement,
   ElementsConsumer,
-} from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+} from "@stripe/react-stripe-js"
+import { loadStripe } from "@stripe/stripe-js"
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 const Payment = ({
@@ -13,18 +13,20 @@ const Payment = ({
   handleBackStep,
   handleNextStep,
   handleCheckout,
+  totalPrice,
+  totalPriceWithCurrency
 }) => {
   const handleSubmit = async (e, elements, stripe) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    if (!stripe || !elements) return;
+    if (!stripe || !elements || totalPrice) return
 
-    const cardElement = elements.getElement(CardElement);
+    const cardElement = elements.getElement(CardElement)
 
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: "card",
       card: cardElement,
-    });
+    })
 
     if (error) {
       console.log("Error ======>>>>", error);
@@ -51,10 +53,11 @@ const Payment = ({
         },
         line_items: checkoutData.live.line_items,
         fulfillment: { shipping_method: user.shippingOptions },
-      };
+        pay_what_you_want: totalPrice
+      }
 
-      handleCheckout(checkoutData.id, orderData);
-      handleNextStep(e, "confirmation");
+      handleCheckout(checkoutData.id, orderData)
+      handleNextStep(e, "confirmation")
     }
   };
 
@@ -78,7 +81,7 @@ const Payment = ({
                   disabled={!stripe}
                   color="primary"
                 >
-                  Pay {checkoutData.live.subtotal.formatted_with_symbol}
+                  Pay {totalPriceWithCurrency}
                 </Button>
               </div>
             </form>

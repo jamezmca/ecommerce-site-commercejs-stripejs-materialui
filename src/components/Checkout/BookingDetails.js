@@ -6,15 +6,22 @@ import {
   ListItemText,
 } from "@material-ui/core";
 
-const BookingDetails = ({ user, checkoutData, handleBackStep, handleNextStep }) => {
-  console.log({checkoutData})
-  console.log({user})
+const BookingDetails = ({ user, checkoutData, handleBackStep, handleNextStep, setTotalPrice, setTotalPriceWithCurrency }) => {
+  console.log({ checkoutData })
+  console.log({ user })
 
   const shippingCost = user.shippingOptions[0].price.raw
-  const shippingCurrency = user.shippingOptions[0].price.symbol
+  const shippingCurrency = checkoutData.live.currency.symbol
   const totalShippingCost = checkoutData.live.line_items.reduce((acc, product) => {
     return acc + product.quantity
   }, 0) * shippingCost
+
+  const totalPrice = checkoutData.live.subtotal.raw + totalShippingCost
+  const totalPriceWithCurrency = `${shippingCurrency}${totalPrice}`
+
+  setTotalPrice(totalPrice)
+  setTotalPriceWithCurrency(totalPriceWithCurrency)
+
   return (
     <>
       <List>
@@ -30,9 +37,15 @@ const BookingDetails = ({ user, checkoutData, handleBackStep, handleNextStep }) 
           </ListItem>
         ))}
         <ListItem>
+          <ListItemText primary="Shipping cost" />
+          <Typography variant="body2">
+            {`${shippingCurrency}${totalShippingCost}`}
+          </Typography>
+        </ListItem>
+        <ListItem>
           <ListItemText primary="Total price" />
           <Typography variant="body2">
-            {checkoutData.live.subtotal.formatted_with_code}
+            {totalPriceWithCurrency}
           </Typography>
         </ListItem>
       </List>
