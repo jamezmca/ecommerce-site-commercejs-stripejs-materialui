@@ -17,7 +17,7 @@ function App() {
   const [orderError, setOrderError] = useState("");
 
   const fetchProducts = async () => {
-    const { data: products } = await commerce.products.list({limit: 200})
+    const { data: products } = await commerce.products.list({ limit: 200 })
     const { data: categoriesData } = await commerce.categories.list()
     const productsPerCategory = categoriesData.reduce((acc, category) => {
       return [
@@ -88,32 +88,34 @@ function App() {
 
   return (
     <Router>
-      <div>
-        <NavBar
-          basketItems={basketData.total_items}
-          totalCost={(basketData.subtotal && basketData.subtotal.formatted_with_symbol) || "00.00"} />
-        <Switch>
-          <Route exact path="/">
-            <Products categories={categories} addProduct={addProduct} />
-          </Route>
-          <Route exact path="/basket">
-            <Basket
-              basketData={basketData}
-              updateProduct={updateProduct}
-              handleEmptyBasket={handleEmptyBasket}
-              RemoveItemFromBasket={RemoveItemFromBasket} />
-          </Route>
-          <Route exact path="/checkout">
-            <Checkout
-              basketData={basketData}
-              handleCheckout={handleCheckout}
-              orderInfo={orderInfo}
-              orderError={orderError} />
-          </Route>
-          <Route exact path="/product-view/:id">
-            <ProductView addProduct={addProduct} />
-          </Route>
-        </Switch>
+      <div style={{display: 'flex', flexDirection: 'column', minHeight: '100vh'}}>
+        <div style={{flexGrow: 1}}>
+          <NavBar
+            basketItems={basketData.total_items}
+            totalCost={(basketData.subtotal && basketData.subtotal.formatted_with_symbol) || "00.00"} />
+          <Switch>
+            <Route exact path="/">
+              <Products categories={categories} addProduct={addProduct} />
+            </Route>
+            <Route exact path="/basket">
+              <Basket
+                basketData={basketData}
+                updateProduct={updateProduct}
+                handleEmptyBasket={handleEmptyBasket}
+                RemoveItemFromBasket={RemoveItemFromBasket} />
+            </Route>
+            <Route exact path="/checkout">
+              <Checkout
+                basketData={basketData}
+                handleCheckout={handleCheckout}
+                orderInfo={orderInfo}
+                orderError={orderError} />
+            </Route>
+            <Route exact path="/product-view/:id">
+              <ProductView addProduct={addProduct} />
+            </Route>
+          </Switch>
+        </div>
         <Footer />
       </div>
     </Router>
