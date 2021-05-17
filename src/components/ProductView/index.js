@@ -60,7 +60,7 @@ const ProductView = ({addProduct}) => {
                 <Grid item xs={12} md={4} className="text">
                     <Typography variant="h2">{product.name}</Typography>
                     <Typography
-                        variant="p"
+                        variant="body2"
                         dangerouslySetInnerHTML={createMarkup(product.description)} />
                     <Typography variant="h3">Price: {product.price}</Typography>
                     <Grid container spacing={4}>
@@ -75,7 +75,7 @@ const ProductView = ({addProduct}) => {
                         <Grid item xs={12}>
                             <Typography className="quantity" variant="h3">Quantity: {quantity}</Typography>
                         </Grid>
-                        <Grid item spacing={4}>
+                        <Grid item xs={4}>
                             <Button size="small"
                                 variant="contained"
                                 className="increase-product-quantity"

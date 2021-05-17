@@ -17,7 +17,7 @@ function App() {
   const [orderError, setOrderError] = useState("");
 
   const fetchProducts = async () => {
-    const { data: products } = await commerce.products.list()
+    const { data: products } = await commerce.products.list({limit: 200})
     const { data: categoriesData } = await commerce.categories.list()
     const productsPerCategory = categoriesData.reduce((acc, category) => {
       return [
